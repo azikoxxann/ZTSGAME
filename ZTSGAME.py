@@ -8,6 +8,9 @@ from dotenv import load_dotenv
 import time
 import random
 from datetime import datetime, timedelta, timezone
+import uvicorn
+import requests
+from fastapi import FastAPI
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(asctime)s - %(message)s')
@@ -19,6 +22,12 @@ if not TOKEN:
     logging.error("Ошибка: API_TOKEN не найден в .env файле.")
     exit()
 bot = telebot.TeleBot(TOKEN)
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"status": "Бот работает!"}
 
 # Файл с данными игроков
 data_file = 'players.json'
@@ -261,4 +270,32 @@ def buy_ticket(call):
     else:
         bot.answer_callback_query(call.id, "❌ Не хватает монет!")
 
+# Функция для отправки "пинга"
+def keep_alive():
+    while True:
+        try:
+            requests.get("https://bobot-7ms5.onrender.com")
+        except Exception as e:
+            print(f"Ошибка пинга: {e}")
+        time.sleep(200)  # Каждые 3 минут
+        
+threading.Thread(target=keep_alive, daemon=True).start()
+
+# Запускаем веб-сервер в отдельном потоке
+def run_fastapi():
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+threading.Thread(target=run_fastapi, daemon=True).start()
+
+# Полностью удаляем Webhook
+bot.remove_webhook()
+requests.get(f"https://api.telegram.org/bot{TOKEN}/deleteWebhook")
+
+# Очищаем зависшие обновления
+requests.get(f"https://api.telegram.org/bot{TOKEN}/getUpdates?offset=-1")
+
+# Ждём 5 секунд перед запуском
+time.sleep(5)
+
+# Запускаем бота
 bot.polling(none_stop=True)
