@@ -233,15 +233,15 @@ def race(call):
         bot.answer_callback_query(call.id, "❌ Не хватает монет для участия!")
         return
 
-    player["balance"] -= 200
+    player["balance"] -= 100
     player["race_ticket"] = False  # Используем билет
     save_data()
 
     if random.choice([True, False]):  # Рандомный выбор: True - победа, False - поражение
-        player["balance"] += 400  # Выигрыш: возвращаем 200 + 200 призовых
-        result_message = " Вы победили! +200 монет!"
+        player["balance"] += 600  # Выигрыш: возвращаем 200 + 400 призовых
+        result_message = " Вы победили! +400 монет!"
     else:
-        result_message = " Вы проиграли! -200 монет!"
+        result_message = " Вы проиграли! -100 монет!"
 
     save_data()
     keyboard, stats = get_main_keyboard(user_id)
