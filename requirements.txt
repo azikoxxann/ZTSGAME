@@ -1,0 +1,10 @@
+python-telegram-bot
+SQLAlchemy
+python-dotenv
+telebot
+pyTelegramBotAPI
+flask
+gunicorn
+uvicorn
+fastapi
+requests
