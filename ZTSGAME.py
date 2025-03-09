@@ -99,7 +99,7 @@ def get_main_keyboard(user_id):
     stats = f"💰 Баланс: {player['balance']} | 🚛 Мощность: {player['power']}\n🔧 Стоимость улучшения: {upgrade_cost} монет\n⚡ Буст активен: {'✅' if player['boost'] else '❌'} | 🎟 Билет на гонки: {'✅' if player['race_ticket'] else '❌'}\n⛽ Топливо: {player['fuel']} | 🛒 Покупок билетов: {player['ticket_purchases']}/{DAILY_TICKET_LIMIT}"
     return keyboard, stats
 
-def is_cooldown_over(user_id, cooldown=1.5):
+def is_cooldown_over(user_id, cooldown=0.5):
     current_time = time.time()
     if user_id in last_click_time:
         elapsed_time = current_time - last_click_time[user_id]
